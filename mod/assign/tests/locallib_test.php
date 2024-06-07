@@ -4671,4 +4671,23 @@ Anchor link 2:<a title=\"bananas\" href=\"../logo-240x60.gif\">Link text</a>
         $this->AssertTrue($assign->is_userid_filtered($student1->id));
         $this->AssertTrue($assign->is_userid_filtered($student2->id));
     }
+    /**
+     * Test report of presence of "blind" groups (groups where users cannot view peers).
+     *
+     * @covers \assign::is_anygroup_without_participation
+     */
+    public function test_is_anygroup_without_participation(){
+        $this->resetAfterTest();
+        // Create 2 courses one without blind groups, the other with.
+        $coursea = $this->getDataGenerator()->create_course();
+        $groupa1 = $this->getDataGenerator()->create_group(['courseid' => $coursea->id, 'participation'=> 1]);
+        $groupa2 = $this->getDataGenerator()->create_group(['courseid' => $coursea->id, 'participation'=> 1]);
+        $assigna =$assign = $this->create_instance($coursea);
+        $courseb = $this->getDataGenerator()->create_course();
+        $groupb1 = $this->getDataGenerator()->create_group(['courseid' => $courseb->id, 'participation'=> 1]);
+        $groupb2 = $this->getDataGenerator()->create_group(['courseid' => $courseb->id, 'participation'=> 0]);
+        $assignb =$assign = $this->create_instance($courseb);
+        $this->assertFalse($assigna->testable_is_anygroup_without_participation($coursea->id));
+        $this->assertTrue($assignb->testable_is_anygroup_without_participation($courseb->id));
+    }
 }
