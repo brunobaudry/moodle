@@ -406,6 +406,7 @@ class renderer extends \plugin_renderer_base {
         return $o;
     }
 
+
     /**
      * Render a table containing all the current grades and feedback.
      *
@@ -891,6 +892,7 @@ class renderer extends \plugin_renderer_base {
         $o .= $this->output->container_end();
         return $o;
     }
+
 
     /**
      * Output the attempt history chooser for this assignment
