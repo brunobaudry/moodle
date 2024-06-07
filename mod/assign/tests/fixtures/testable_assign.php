@@ -170,4 +170,7 @@ class mod_assign_testable_assign extends assign {
                                                           $complete,
                                                           $completion);
     }
+    public function testable_is_anygroup_without_participation($courseid){
+        return parent::is_anygroup_without_participation($courseid);
+    }
 }
