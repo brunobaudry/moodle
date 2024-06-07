@@ -561,6 +561,12 @@ class assign_grading_summary implements renderable {
     const WARN_GROUPS_REQUIRED = 'warnrequired';
     /** @var string warn about group submissions, as some will submit as 'Default group' */
     const WARN_GROUPS_OPTIONAL = 'warnoptional';
+    /** @var string warn about group submissions, as group user cannot see peers */
+    const WARN_GROUPS_USERS_CANNOT_SEE_PEERS = 'warnblindgroup';
+    /** @var string warn about group submissions, as some will submit as 'Default group' and as group user cannot see peers */
+    const WARN_GROUPS_USERS_CANNOT_SEE_PEERS_REQUIRED = 'warnblindgrouprequired';
+    /** @var string warn about group submissions, as some will submit as 'Default group' and as group user cannot see peers */
+    const WARN_GROUPS_USERS_CANNOT_SEE_PEERS_OPTIONAL = 'warnblindgroupoptional';
 
     /**
      * constructor

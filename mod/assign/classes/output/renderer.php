@@ -316,6 +316,14 @@ class renderer extends \plugin_renderer_base {
                 $o .= $this->output->notification(get_string('ungroupedusers', 'assign'));
             } else if ($summary->warnofungroupedusers === \assign_grading_summary::WARN_GROUPS_OPTIONAL) {
                 $o .= $this->output->notification(get_string('ungroupedusersoptional', 'assign'));
+            } else if ($summary->warnofungroupedusers === \assign_grading_summary::WARN_GROUPS_USERS_CANNOT_SEE_PEERS) {
+                $o .= $this->output->notification(get_string('unacknoledgeablepeers', 'assign'));
+            } else if ($summary->warnofungroupedusers === \assign_grading_summary::WARN_GROUPS_USERS_CANNOT_SEE_PEERS_REQUIRED) {
+                $o .= $this->output->notification(get_string('ungroupedusers', 'assign'));
+                $o .= $this->output->notification(get_string('unacknoledgeablepeers', 'assign'));
+            } else if ($summary->warnofungroupedusers === \assign_grading_summary::WARN_GROUPS_USERS_CANNOT_SEE_PEERS_OPTIONAL) {
+                $o .= $this->output->notification(get_string('ungroupedusersoptional', 'assign'));
+                $o .= $this->output->notification(get_string('unacknoledgeablepeers', 'assign'));
             }
             $cell1content = get_string('numberofteams', 'assign');
         } else {
@@ -396,6 +404,7 @@ class renderer extends \plugin_renderer_base {
 
         return $o;
     }
+
 
     /**
      * Render a table containing all the current grades and feedback.
@@ -652,11 +661,18 @@ class renderer extends \plugin_renderer_base {
         $t->attributes['class'] = 'generaltable table-bordered';
 
         $warningmsg = '';
+
         if ($status->teamsubmissionenabled) {
             $cell1content = get_string('submissionteam', 'assign');
             $group = $status->submissiongroup;
             if ($group) {
                 $cell2content = format_string($group->name, false, ['context' => $status->context]);
+                if ($group->participation === '0') {
+                    $groupalert = new \core\output\notification(get_string('blindteam', 'assign'), 'error');
+                    $groupalert->set_show_closebutton(false);
+                    $cell2content .= $this->output->render($groupalert);
+                    $warningmsg = $this->output->notification(get_string('blindteam_desc', 'assign'), 'error');
+                }
             } else if ($status->preventsubmissionnotingroup) {
                 if (count($status->usergroups) == 0) {
                     $notification = new \core\output\notification(get_string('noteam', 'assign'), 'error');
@@ -724,7 +740,7 @@ class renderer extends \plugin_renderer_base {
                 $members = $status->submissiongroupmemberswhoneedtosubmit;
                 $userslist = array();
                 foreach ($members as $member) {
-                    $urlparams = array('id' => $member->id, 'course'=>$status->courseid);
+                    $urlparams = ['id' => $member->id, 'course' => $status->courseid];
                     $url = new \moodle_url('/user/view.php', $urlparams);
                     if ($status->view == assign_submission_status::GRADER_VIEW && $status->blindmarking) {
                         $userslist[] = $member->alias;
@@ -762,14 +778,14 @@ class renderer extends \plugin_renderer_base {
         // Grading status.
         $cell1content = get_string('gradingstatus', 'assign');
         if ($status->gradingstatus == ASSIGN_GRADING_STATUS_GRADED ||
-            $status->gradingstatus == ASSIGN_GRADING_STATUS_NOT_GRADED) {
+                $status->gradingstatus == ASSIGN_GRADING_STATUS_NOT_GRADED) {
             $cell2content = get_string($status->gradingstatus, 'assign');
         } else {
             $gradingstatus = 'markingworkflowstate' . $status->gradingstatus;
             $cell2content = get_string($gradingstatus, 'assign');
         }
         if ($status->gradingstatus == ASSIGN_GRADING_STATUS_GRADED ||
-            $status->gradingstatus == ASSIGN_MARKING_WORKFLOW_STATE_RELEASED) {
+                $status->gradingstatus == ASSIGN_MARKING_WORKFLOW_STATE_RELEASED) {
             $cell2attributes = array('class' => 'submissiongraded');
         } else {
             $cell2attributes = array('class' => 'submissionnotgraded');
@@ -875,6 +891,7 @@ class renderer extends \plugin_renderer_base {
         $o .= $this->output->container_end();
         return $o;
     }
+
 
     /**
      * Output the attempt history chooser for this assignment
