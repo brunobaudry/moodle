@@ -3113,9 +3113,11 @@ class assign {
      * @param int $groupid The id of the group whose members we want or 0 for the default group
      * @param bool $onlyids Whether to retrieve only the user id's
      * @param bool $excludesuspended Whether to exclude suspended users
+     * @param bool $eveninvisible use this to list all groups that the user is in. Never set to true when displaying groups to
+     * *          users.
      * @return array The users (possibly id's only)
      */
-    public function get_submission_group_members($groupid, $onlyids, $excludesuspended = false) {
+    public function get_submission_group_members($groupid, $onlyids, $excludesuspended = false, $eveninvisible = false) {
         $members = array();
         if ($groupid != 0) {
             $allusers = $this->list_participants($groupid, $onlyids);
@@ -3125,9 +3127,10 @@ class assign {
                 }
             }
         } else {
+            // Here we check on group ID 0 hence user not in any group.
             $allusers = $this->list_participants(null, $onlyids);
             foreach ($allusers as $user) {
-                if ($this->get_submission_group($user->id) == null) {
+                if ($this->get_submission_group($user->id, $eveninvisible) == null) {
                     $members[] = $user;
                 }
             }
@@ -3181,13 +3184,15 @@ class assign {
      * @param bool $create If set to true a new submission object will be created in the database
      *                     with the status set to "new".
      * @param int $attemptnumber - -1 means the latest attempt
+     * @param bool $eveninvisible use this to list all groups that the user is in. Never set to true when displaying groups to
+     *         users.
      * @return stdClass|false The submission
      */
-    public function get_group_submission($userid, $groupid, $create, $attemptnumber=-1) {
+    public function get_group_submission($userid, $groupid, $create, $attemptnumber = -1, $eveninvisible = false) {
         global $DB;
 
         if ($groupid == 0) {
-            $group = $this->get_submission_group($userid);
+            $group = $this->get_submission_group($userid, $eveninvisible);
             if ($group) {
                 $groupid = $group->id;
             }
@@ -3377,21 +3382,22 @@ class assign {
         return $o;
     }
 
-
     /**
      * This is used for team assignments to get the group for the specified user.
      * If the user is a member of multiple or no groups this will return false
      *
      * @param int $userid The id of the user whose submission we want
+     * @param bool $eveninvisible use this to list all groups that the user is in. Never set to true when displaying groups to
+     *          users.
      * @return mixed The group or false
      */
-    public function get_submission_group($userid) {
+    public function get_submission_group($userid, $eveninvisible = false) {
 
         if (isset($this->usersubmissiongroups[$userid])) {
             return $this->usersubmissiongroups[$userid];
         }
 
-        $groups = $this->get_all_groups($userid);
+        $groups = $this->get_all_groups($userid, $eveninvisible);
         if (count($groups) != 1) {
             $return = false;
         } else {
@@ -3407,16 +3413,22 @@ class assign {
     /**
      * Gets all groups the user is a member of.
      *
-     * @param int $userid Teh id of the user who's groups we are checking
+     * @param int $userid The id of the user who's groups we are checking
+     * @param bool $eveninvisible use this to list all groups that the user is in. Never set to true when displaying groups to
+     *         users.
      * @return array The group objects
      */
-    public function get_all_groups($userid) {
+    public function get_all_groups($userid, $eveninvisible = false) {
         if (isset($this->usergroups[$userid])) {
             return $this->usergroups[$userid];
         }
 
         $grouping = $this->get_instance()->teamsubmissiongroupingid;
-        $return = groups_get_all_groups($this->get_course()->id, $userid, $grouping, 'g.*', false, true);
+        if ($eveninvisible) {
+            $return = groups_get_all_groups($this->get_course()->id, $userid, $grouping, 'g.*', false, false);
+        } else {
+            $return = groups_get_all_groups($this->get_course()->id, $userid, $grouping, 'g.*', false, true);
+        }
 
         $this->usergroups[$userid] = $return;
 
@@ -5789,7 +5801,8 @@ class assign {
 
         if ($instance->teamsubmission) {
             $warnofungroupedusers = assign_grading_summary::WARN_GROUPS_NO;
-            $defaultteammembers = $this->get_submission_group_members(0, true);
+            // Members not assigned in any group.
+            $defaultteammembers = $this->get_submission_group_members(0, false, false, true);
             if (count($defaultteammembers) > 0) {
                 if ($instance->preventsubmissionnotingroup) {
                     $warnofungroupedusers = assign_grading_summary::WARN_GROUPS_REQUIRED;
@@ -5797,7 +5810,21 @@ class assign {
                     $warnofungroupedusers = assign_grading_summary::WARN_GROUPS_OPTIONAL;
                 }
             }
-
+            $hasblindgroups = $this->is_anygroup_without_participation($course->id);
+            if ($hasblindgroups) {
+                // Set up the flag for the renderer to display the correct message.
+                switch ($warnofungroupedusers) {
+                    case assign_grading_summary::WARN_GROUPS_REQUIRED :
+                        $warnofungroupedusers = assign_grading_summary::WARN_GROUPS_USERS_CANNOT_SEE_PEERS_REQUIRED;
+                        break;
+                    case assign_grading_summary::WARN_GROUPS_OPTIONAL :
+                        $warnofungroupedusers = assign_grading_summary::WARN_GROUPS_USERS_CANNOT_SEE_PEERS_OPTIONAL;
+                        break;
+                    default :
+                        $warnofungroupedusers = assign_grading_summary::WARN_GROUPS_USERS_CANNOT_SEE_PEERS;
+                        break;
+                }
+            }
             $summary = new assign_grading_summary(
                 $this->count_teams($activitygroup),
                 $instance->submissiondrafts,
@@ -5985,14 +6012,25 @@ class assign {
         $submission = $this->get_user_submission($user->id, false);
         // Figure out if we are team or solitary submission.
         $teamsubmission = null;
+        $isblindgroup = false;
         if ($instance->teamsubmission) {
-            $teamsubmission = $this->get_group_submission($user->id, 0, false);
+            $teamsubmission = $this->get_group_submission($user->id, 0, false, -1, true);
+            // Check if the group allows to view peers.
+            if($teamsubmission->groupid != 0){
+                $group = groups_get_group($teamsubmission->groupid);
+                $isblindgroup = $group->participation === '0';
+            }else{
+                $isblindgroup = $this->is_anygroup_without_participation($instance->course);
+            }
         }
-
-        $showsubmit = ($this->submissions_open($user->id)
-            && $this->show_submit_button($submission, $teamsubmission, $user->id));
-        $showedit = ($this->is_any_submission_plugin_enabled()) && $this->can_edit_submission($user->id);
-
+        if ($isblindgroup) {
+            $showsubmit = false;
+            $showedit = false;
+        } else {
+            $showsubmit = ($this->submissions_open($user->id)
+                    && $this->show_submit_button($submission, $teamsubmission, $user->id));
+            $showedit = ($this->is_any_submission_plugin_enabled()) && $this->can_edit_submission($user->id);
+        }
         // The method get_group_submission() says that it returns a stdClass, but it can return false >_>.
         if ($teamsubmission === false) {
             $teamsubmission = new stdClass();
@@ -9763,6 +9801,23 @@ class assign {
         }
 
         return !empty($submission) && $submission->status !== ASSIGN_SUBMISSION_STATUS_SUBMITTED && $timedattemptstarted;
+    }
+    /**
+     * Check if there are some courses that do not allow members to see other members.
+     *
+     * @param int $courseid the id of the current course.
+     * @param int $groupid optional group id to check a single one.
+     * @return bool
+     */
+    protected function is_anygroup_without_participation(int $courseid) {
+        // Participation is the attribute name.
+        $allgroups = groups_get_all_groups($courseid);
+        foreach ($allgroups as $group) {
+            if ($group->participation == '0') {
+                return true;
+            }
+        }
+        return false;
     }
 }
 

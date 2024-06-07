@@ -128,6 +128,9 @@ $string['beginassignment'] = 'Begin assignment';
 $string['blindmarking'] = 'Anonymous submissions';
 $string['blindmarkingenabledwarning'] = 'Anonymous submissions are enabled for this activity. Grades will not be added to the gradebook until student identities are revealed via the grading action menu.';
 $string['blindmarking_help'] = 'Anonymous submissions hide the identity of students from markers. Anonymous submission settings will be locked once a submission or grade has been made in relation to this assignment.';
+$string['blindteam'] = 'This group does not allow to view other members';
+$string['blindteam_desc'] =
+        'This assignment requires submission in groups. The group you are member of does not allow viewing the other particpant, so you cannot create a submission. Please contact your teacher to fix this issue.';
 $string['cachedef_overrides'] = 'User and group override information';
 $string['calendardue'] = '{$a} is due';
 $string['calendargradingdue'] = '{$a} is due to be graded';
@@ -638,6 +641,7 @@ $string['timemodified'] = 'Last modified';
 $string['timeremaining'] = 'Time remaining';
 $string['timeremainingcolon'] = 'Time remaining: {$a}';
 $string['togglezoom'] = 'Zoom in/out of region';
+$string['unacknoledgeablepeers'] = 'Some of the groups\' setting do not allow group members to see their group\'s peers';
 $string['ungroupedusers'] = 'The setting \'Require group to make submission\' is enabled and some users are either not a member of any group, or are a member of more than one group, so are unable to make submissions.';
 $string['ungroupedusersoptional'] = 'The setting \'Students submit in groups\' is enabled and some users are either not a member of any group, or are a member of more than one group. Please be aware that these students will submit as members of the \'Default group\'.';
 $string['unlocksubmissionforstudent'] = 'Allow submissions for student: (id={$a->id}, fullname={$a->fullname}).';
