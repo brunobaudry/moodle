@@ -3120,7 +3120,7 @@ class assign {
      * *          users.
      * @return array The users (possibly id's only)
      */
-    public function get_submission_group_members($groupid, $onlyids, $excludesuspended = false, $eveninvisible = false) {
+    public function get_submission_group_members($groupid, $onlyids, $excludesuspended = false) {
         $members = array();
         if ($groupid != 0) {
             $allusers = $this->list_participants($groupid, $onlyids);
@@ -3133,7 +3133,7 @@ class assign {
             // Here we check on group ID 0 hence user not in any group.
             $allusers = $this->list_participants(null, $onlyids);
             foreach ($allusers as $user) {
-                if ($this->get_submission_group($user->id, $eveninvisible) == null) {
+                if ($this->get_submission_group($user->id) == null) {
                     $members[] = $user;
                 }
             }
@@ -3195,7 +3195,7 @@ class assign {
         global $DB;
 
         if ($groupid == 0) {
-            $group = $this->get_submission_group($userid, $eveninvisible);
+            $group = $this->get_submission_group($userid);
             if ($group) {
                 $groupid = $group->id;
             }
@@ -3394,13 +3394,13 @@ class assign {
      *          users.
      * @return mixed The group or false
      */
-    public function get_submission_group($userid, $eveninvisible = false) {
+    public function get_submission_group($userid) {
 
         if (isset($this->usersubmissiongroups[$userid])) {
             return $this->usersubmissiongroups[$userid];
         }
 
-        $groups = $this->get_all_groups($userid, $eveninvisible);
+        $groups = $this->get_all_groups($userid);
         if (count($groups) != 1) {
             $return = false;
         } else {
@@ -3421,7 +3421,7 @@ class assign {
      *         users.
      * @return array The group objects
      */
-    public function get_all_groups($userid, $eveninvisible = false) {
+    public function get_all_groups($userid) {
         if (isset($this->usergroups[$userid])) {
             return $this->usergroups[$userid];
         }
@@ -9832,8 +9832,10 @@ class assign {
     protected function is_anygroup_without_participation(int $courseid) {
         // Participation is the attribute name.
         $allgroups = groups_get_all_groups($courseid);
+
         foreach ($allgroups as $group) {
-            if ($group->participation == '0') {
+            $test = ($group->participation == '0');
+            if (!$group->participation) {
                 return true;
             }
         }
