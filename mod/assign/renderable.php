@@ -22,12 +22,13 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use \mod_assign\output\assign_submission_status;
+use mod_assign\output\assign_submission_status;
 
 defined('MOODLE_INTERNAL') || die();
 
 /**
  * This class wraps the submit for grading confirmation page
+ *
  * @package   mod_assign
  * @copyright 2012 NetSpot {@link http://www.netspot.com.au}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -42,6 +43,7 @@ class assign_submit_for_grading_page implements renderable {
 
     /**
      * Constructor
+     *
      * @param string $notifications - Any mesages to display
      * @param int $coursemoduleid
      * @param moodleform $confirmform
@@ -56,6 +58,7 @@ class assign_submit_for_grading_page implements renderable {
 
 /**
  * Implements a renderable message notification
+ *
  * @package   mod_assign
  * @copyright 2012 NetSpot {@link http://www.netspot.com.au}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -74,6 +77,7 @@ class assign_gradingmessage implements renderable {
 
     /**
      * Constructor
+     *
      * @param string $heading This is the heading to display
      * @param string $message This is the message to display
      * @param bool $gradingerror Set to true to display the message as an error.
@@ -92,6 +96,7 @@ class assign_gradingmessage implements renderable {
 
 /**
  * Implements a renderable grading options form
+ *
  * @package   mod_assign
  * @copyright 2012 NetSpot {@link http://www.netspot.com.au}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -106,6 +111,7 @@ class assign_form implements renderable {
 
     /**
      * Constructor
+     *
      * @param string $classname This is the class name for the container div
      * @param moodleform $form This is the moodleform
      * @param string $jsinitfunction This is an optional js function to add to the page requires
@@ -120,6 +126,7 @@ class assign_form implements renderable {
 
 /**
  * Implements a renderable user summary
+ *
  * @package   mod_assign
  * @copyright 2012 NetSpot {@link http://www.netspot.com.au}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -142,6 +149,7 @@ class assign_user_summary implements renderable {
 
     /**
      * Constructor
+     *
      * @param stdClass $user
      * @param int $courseid
      * @param bool $viewfullnames
@@ -151,12 +159,12 @@ class assign_user_summary implements renderable {
      * @param bool $suspendeduser
      */
     public function __construct(stdClass $user,
-                                $courseid,
-                                $viewfullnames,
-                                $blindmarking,
-                                $uniqueidforuser,
-                                $extrauserfields,
-                                $suspendeduser = false) {
+            $courseid,
+            $viewfullnames,
+            $blindmarking,
+            $uniqueidforuser,
+            $extrauserfields,
+            $suspendeduser = false) {
         $this->user = $user;
         $this->courseid = $courseid;
         $this->viewfullnames = $viewfullnames;
@@ -169,15 +177,16 @@ class assign_user_summary implements renderable {
 
 /**
  * Implements a renderable feedback plugin feedback
+ *
  * @package   mod_assign
  * @copyright 2012 NetSpot {@link http://www.netspot.com.au}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class assign_feedback_plugin_feedback implements renderable {
     /** @var int SUMMARY */
-    const SUMMARY                = 10;
+    const SUMMARY = 10;
     /** @var int FULL */
-    const FULL                   = 20;
+    const FULL = 20;
 
     /** @var assign_submission_plugin $plugin */
     public $plugin = null;
@@ -203,11 +212,11 @@ class assign_feedback_plugin_feedback implements renderable {
      * @param array $returnparams The params required to return to this page
      */
     public function __construct(assign_feedback_plugin $plugin,
-                                stdClass $grade,
-                                $view,
-                                $coursemoduleid,
-                                $returnaction,
-                                $returnparams) {
+            stdClass $grade,
+            $view,
+            $coursemoduleid,
+            $returnaction,
+            $returnparams) {
         $this->plugin = $plugin;
         $this->grade = $grade;
         $this->view = $view;
@@ -220,15 +229,16 @@ class assign_feedback_plugin_feedback implements renderable {
 
 /**
  * Implements a renderable submission plugin submission
+ *
  * @package   mod_assign
  * @copyright 2012 NetSpot {@link http://www.netspot.com.au}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class assign_submission_plugin_submission implements renderable {
     /** @var int SUMMARY */
-    const SUMMARY                = 10;
+    const SUMMARY = 10;
     /** @var int FULL */
-    const FULL                   = 20;
+    const FULL = 20;
 
     /** @var assign_submission_plugin $plugin */
     public $plugin = null;
@@ -245,6 +255,7 @@ class assign_submission_plugin_submission implements renderable {
 
     /**
      * Constructor
+     *
      * @param assign_submission_plugin $plugin
      * @param stdClass $submission
      * @param string $view one of submission_plugin::SUMMARY, submission_plugin::FULL
@@ -253,11 +264,11 @@ class assign_submission_plugin_submission implements renderable {
      * @param array $returnparams The params to return to the current page
      */
     public function __construct(assign_submission_plugin $plugin,
-                                stdClass $submission,
-                                $view,
-                                $coursemoduleid,
-                                $returnaction,
-                                $returnparams) {
+            stdClass $submission,
+            $view,
+            $coursemoduleid,
+            $returnaction,
+            $returnparams) {
         $this->plugin = $plugin;
         $this->submission = $submission;
         $this->view = $view;
@@ -269,6 +280,7 @@ class assign_submission_plugin_submission implements renderable {
 
 /**
  * Renderable feedback status
+ *
  * @package   mod_assign
  * @copyright 2012 NetSpot {@link http://www.netspot.com.au}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -300,6 +312,7 @@ class assign_feedback_status implements renderable {
 
     /**
      * Constructor
+     *
      * @param string $gradefordisplay
      * @param mixed $gradeddate
      * @param mixed $grader
@@ -312,15 +325,15 @@ class assign_feedback_status implements renderable {
      * @param string $gradingcontrollergrade The grade information rendered by a grade controller
      */
     public function __construct($gradefordisplay,
-                                $gradeddate,
-                                $grader,
-                                $feedbackplugins,
-                                $grade,
-                                $coursemoduleid,
-                                $returnaction,
-                                $returnparams,
-                                $canviewfullnames,
-                                $gradingcontrollergrade = '') {
+            $gradeddate,
+            $grader,
+            $feedbackplugins,
+            $grade,
+            $coursemoduleid,
+            $returnaction,
+            $returnparams,
+            $canviewfullnames,
+            $gradingcontrollergrade = '') {
         $this->gradefordisplay = $gradefordisplay;
         $this->gradeddate = $gradeddate;
         $this->grader = $grader;
@@ -336,6 +349,7 @@ class assign_feedback_status implements renderable {
 
 /**
  * Renderable submission status
+ *
  * @package   mod_assign
  * @copyright 2016 Damyon Wiese
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -389,15 +403,15 @@ class assign_attempt_history implements renderable {
      * @param int $rownum
      */
     public function __construct($submissions,
-                                $grades,
-                                $submissionplugins,
-                                $feedbackplugins,
-                                $coursemoduleid,
-                                $returnaction,
-                                $returnparams,
-                                $cangrade,
-                                $useridlistid,
-                                $rownum) {
+            $grades,
+            $submissionplugins,
+            $feedbackplugins,
+            $coursemoduleid,
+            $returnaction,
+            $returnparams,
+            $cangrade,
+            $useridlistid,
+            $rownum) {
         $this->submissions = $submissions;
         $this->grades = $grades;
         $this->submissionplugins = $submissionplugins;
@@ -440,9 +454,9 @@ class assign_attempt_history_chooser implements renderable, templatable {
      * @param int $userid
      */
     public function __construct($submissions,
-                                $grades,
-                                $coursemoduleid,
-                                $userid) {
+            $grades,
+            $coursemoduleid,
+            $userid) {
         $this->submissions = $submissions;
         $this->grades = $grades;
         $this->coursemoduleid = $coursemoduleid;
@@ -483,7 +497,7 @@ class assign_attempt_history_chooser implements renderable, templatable {
             }
 
             $attemptsummaryparams = array('attemptnumber' => $submission->attemptnumber + 1,
-                                          'submissionsummary' => $submissionsummary);
+                    'submissionsummary' => $submissionsummary);
             $submission->attemptsummary = get_string('attemptheading', 'assign', $attemptsummaryparams);
             $submission->statussummary = get_string('submissionstatus_' . $submission->status, 'assign');
 
@@ -495,6 +509,7 @@ class assign_attempt_history_chooser implements renderable, templatable {
 
 /**
  * Renderable header related to an individual subplugin
+ *
  * @package   mod_assign
  * @copyright 2014 Henning Bostelmann
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -515,6 +530,7 @@ class assign_plugin_header implements renderable {
 
 /**
  * Renderable grading summary
+ *
  * @package   mod_assign
  * @copyright 2012 NetSpot {@link http://www.netspot.com.au}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -546,7 +562,7 @@ class assign_grading_summary implements renderable {
     public $warnofungroupedusers = false;
     /** @var boolean relativedatesmode - Is the course a relative dates mode course or not */
     public $courserelativedatesmode = false;
-    /** @var int coursestartdate - start date of the course as a unix timestamp*/
+    /** @var int coursestartdate - start date of the course as a unix timestamp */
     public $coursestartdate;
     /** @var boolean cangrade - Can the current user grade students? */
     public $cangrade = false;
@@ -563,7 +579,7 @@ class assign_grading_summary implements renderable {
     const WARN_GROUPS_OPTIONAL = 'warnoptional';
     /** @var string warn about group submissions, as group user cannot see peers */
     const WARN_GROUPS_USERS_CANNOT_SEE_PEERS = 'warnblindgroup';
-    /** @var string warn about group submissions, as some will submit as 'Default group' and as group user cannot see peers */
+    /** @var string warn about group submissions, as groups are required and as group user cannot see peers */
     const WARN_GROUPS_USERS_CANNOT_SEE_PEERS_REQUIRED = 'warnblindgrouprequired';
     /** @var string warn about group submissions, as some will submit as 'Default group' and as group user cannot see peers */
     const WARN_GROUPS_USERS_CANNOT_SEE_PEERS_OPTIONAL = 'warnblindgroupoptional';
@@ -590,22 +606,22 @@ class assign_grading_summary implements renderable {
      * @param cm_info|null $cm The course module object.
      */
     public function __construct($participantcount,
-                                $submissiondraftsenabled,
-                                $submissiondraftscount,
-                                $submissionsenabled,
-                                $submissionssubmittedcount,
-                                $cutoffdate,
-                                $duedate,
-                                $timelimit,
-                                $coursemoduleid,
-                                $submissionsneedgradingcount,
-                                $teamsubmission,
-                                $warnofungroupedusers,
-                                $courserelativedatesmode,
-                                $coursestartdate,
-                                $cangrade = true,
-                                $isvisible = true,
-                                cm_info $cm = null) {
+            $submissiondraftsenabled,
+            $submissiondraftscount,
+            $submissionsenabled,
+            $submissionssubmittedcount,
+            $cutoffdate,
+            $duedate,
+            $timelimit,
+            $coursemoduleid,
+            $submissionsneedgradingcount,
+            $teamsubmission,
+            $warnofungroupedusers,
+            $courserelativedatesmode,
+            $coursestartdate,
+            $cangrade = true,
+            $isvisible = true,
+            cm_info $cm = null) {
         $this->participantcount = $participantcount;
         $this->submissiondraftsenabled = $submissiondraftsenabled;
         $this->submissiondraftscount = $submissiondraftscount;
@@ -628,6 +644,7 @@ class assign_grading_summary implements renderable {
 
 /**
  * Renderable course index summary
+ *
  * @package   mod_assign
  * @copyright 2012 NetSpot {@link http://www.netspot.com.au}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -665,17 +682,15 @@ class assign_course_index_summary implements renderable {
      */
     public function add_assign_info($cmid, $cmname, $sectionname, $timedue, $submissioninfo, $gradeinfo, $cangrade = false) {
         $this->assignments[] = ['cmid' => $cmid,
-                               'cmname' => $cmname,
-                               'sectionname' => $sectionname,
-                               'timedue' => $timedue,
-                               'submissioninfo' => $submissioninfo,
-                               'gradeinfo' => $gradeinfo,
-                               'cangrade' => $cangrade];
+                'cmname' => $cmname,
+                'sectionname' => $sectionname,
+                'timedue' => $timedue,
+                'submissioninfo' => $submissioninfo,
+                'gradeinfo' => $gradeinfo,
+                'cangrade' => $cangrade];
     }
 
-
 }
-
 
 /**
  * An assign file class that extends rendererable class and is used by the assign module.
@@ -719,11 +734,11 @@ class assign_files implements renderable {
         $this->dir = $fs->get_area_tree($this->context->id, $component, $filearea, $sid);
 
         $files = $fs->get_area_files($this->context->id,
-                                     $component,
-                                     $filearea,
-                                     $sid,
-                                     'timemodified',
-                                     false);
+                $component,
+                $filearea,
+                $sid,
+                'timemodified',
+                false);
 
         if (!empty($CFG->enableportfolios)) {
             require_once($CFG->libdir . '/portfoliolib.php');
@@ -731,12 +746,12 @@ class assign_files implements renderable {
                     has_capability('mod/assign:exportownsubmission', $this->context)) {
                 $button = new portfolio_add_button();
                 $callbackparams = array('cmid' => $this->cm->id,
-                                        'sid' => $sid,
-                                        'area' => $filearea,
-                                        'component' => $component);
+                        'sid' => $sid,
+                        'area' => $filearea,
+                        'component' => $component);
                 $button->set_callback_options('assign_portfolio_caller',
-                                              $callbackparams,
-                                              'mod_assign');
+                        $callbackparams,
+                        'mod_assign');
                 $button->reset_formats();
                 $this->portfolioform = $button->to_html(PORTFOLIO_ADD_TEXT_LINK);
             }
@@ -758,13 +773,14 @@ class assign_files implements renderable {
 
     /**
      * Get the modified time of the specified file.
+     *
      * @param stored_file $file
      * @return string
      */
     public function get_modified_time(stored_file $file): string {
         return userdate(
-            $file->get_timemodified(),
-            get_string('strftimedatetime', 'langconfig'),
+                $file->get_timemodified(),
+                get_string('strftimedatetime', 'langconfig'),
         );
     }
 
@@ -776,13 +792,13 @@ class assign_files implements renderable {
      */
     public function get_file_url(stored_file $file): moodle_url {
         return \moodle_url::make_pluginfile_url(
-            $this->context->id,
-            $file->get_component(),
-            $file->get_filearea(),
-            $file->get_itemid(),
-            $file->get_filepath(),
-            $file->get_filename(),
-            true,
+                $this->context->id,
+                $file->get_component(),
+                $file->get_filearea(),
+                $file->get_itemid(),
+                $file->get_filepath(),
+                $file->get_filename(),
+                true,
         );
     }
 }
