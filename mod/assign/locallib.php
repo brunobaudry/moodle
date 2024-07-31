@@ -9802,45 +9802,6 @@ class assign {
 
         return !empty($submission) && $submission->status !== ASSIGN_SUBMISSION_STATUS_SUBMITTED && $timedattemptstarted;
     }
-
-    /**
-     * Check if there are some courses that do not allow members to see other members.
-     *
-     * @param int $courseid the id of the current course.
-     * @param int $groupid optional group id to check a single one.
-     * @return bool
-     */
-    protected function is_anygroup_without_participation(int $courseid) {
-        // Participation is the attribute name.
-        $allgroups = groups_get_all_groups($courseid);
-
-        foreach ($allgroups as $group) {
-            $test = ($group->participation == '0');
-            if (!$group->participation) {
-                return true;
-            }
-        }
-        return false;
-    }
-    /**
-     * Check if there are some courses that do not allow members to see other members.
-     *
-     * @param int $courseid the id of the current course.
-     * @param int $groupid optional group id to check a single one.
-     * @return bool
-     */
-    protected function is_anygroup_without_participation(int $courseid) {
-        // Participation is the attribute name.
-        $allgroups = groups_get_all_groups($courseid);
-
-        foreach ($allgroups as $group) {
-            $test = ($group->participation == '0');
-            if (!$group->participation) {
-                return true;
-            }
-        }
-        return false;
-    }
 }
 
 /**
