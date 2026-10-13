@@ -243,12 +243,12 @@
         border: 2px solid transparent;
 
         &.selected {
-            border: 2px solid $primary;
-            background-color: $primary-light-background;
+            border: 2px solid var(--mds-border-interactive-primary-default);
+            background-color: var(--mds-bg-surface-strong);
         }
 
         &:not(.selected):hover {
-            background-color: var(--#{$prefix}gray-100);
+            background-color: var(--mds-bg-surface-strong);
         }
 
         .optioninfo {
