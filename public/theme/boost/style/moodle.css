@@ -36992,8 +36992,8 @@ body.editing#page-course-learningoutcomes .activity-item:hover:not(:has(.activit
   border: 2px solid transparent;
 }
 .modchoosercontent .optionscontainer .option.selected {
-  border: 2px solid #0f6cbf;
-  background-color: #e7f0f9;
+  border: 2px solid var(--bs-primary);
+  background-color: var(--bs-primary-bg-subtle);
 }
 .modchoosercontent .optionscontainer .option:not(.selected):hover {
   background-color: var(--bs-gray-100);
