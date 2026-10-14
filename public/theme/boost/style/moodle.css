@@ -53936,6 +53936,10 @@ input[type=button].btn-block {
 [data-bs-theme=dark] .bg-light .text-dark {
   --bs-dark-rgb: 233, 236, 239;
 }
+[data-bs-theme=dark] .badge.bg-secondary.text-dark,
+[data-bs-theme=dark] .badge.bg-warning.text-dark {
+  --bs-dark-rgb: 29, 33, 37;
+}
 [data-bs-theme=dark] .btn-secondary {
   --bs-btn-color: #000000;
   --bs-btn-bg: #8f959e;
