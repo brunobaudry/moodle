@@ -267,7 +267,8 @@ img.icon {
     @include dark-mode {
         &[src*="/t/"],
         &[src*="/e/"],
-        &[src*="/a/"] {
+        &[src*="/a/"],
+        &[src*="qtype_"] {
             filter: invert(1);
         }
     }
