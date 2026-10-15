@@ -28,3 +28,8 @@ Feature: Test editing a drag and drop markers questions
       | Question name | Edited question name |
     And I press "id_submitbutton"
     Then I should see "Edited question name"
+
+  @javascript @accessibility
+  Scenario: Edit a drag and drop markers question and check accessibility
+    When I am on the "Drag markers" "core_question > edit" page logged in as teacher
+    Then the "#region-main" "css_element" should meet accessibility standards
