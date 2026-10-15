@@ -45,3 +45,8 @@ Feature: Test editing a drag and drop onto image questions
       | Question name                       | Drag onto image |
       | Penalty for each incorrect try      | 33#33333%       |
       | Penalty for each incorrect try      | 0.3333333       |
+
+  @javascript @accessibility
+  Scenario: Edit a drag and drop onto image question and check accessibility
+    When I am on the "Drag onto image" "core_question > edit" page logged in as teacher
+    Then the "#region-main" "css_element" should meet accessibility standards
