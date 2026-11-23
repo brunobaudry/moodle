@@ -149,6 +149,7 @@ abstract class column_base extends view_component {
         if (!empty($columnactions)) {
             $actions = array_map(fn($columnaction) => $columnaction->get_action_menu_link($this), $columnactions);
             $actionmenu = new \action_menu($actions);
+            $actionmenu->set_kebab_trigger(get_string('actions'));
             $data['actionmenu'] = $actionmenu->export_for_template($renderer);
         }
 
