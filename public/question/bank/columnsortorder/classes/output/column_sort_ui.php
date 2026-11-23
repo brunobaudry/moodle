@@ -69,6 +69,7 @@ class column_sort_ui implements renderable, templatable {
             $actionmenu = new \action_menu([
                 $removeaction->get_action_menu_link($column->class::from_column_name($qbank, $column->colname)),
             ]);
+            $actionmenu->set_kebab_trigger(get_string('actions'));
             $params['names'][] = [
                 'name' => $name,
                 'movetitle' => get_string('movecontent', 'core', $name),
