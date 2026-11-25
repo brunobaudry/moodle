@@ -321,3 +321,12 @@ Feature: Display and choose from the available activities in course
     And "Add selected activity" "button" should exist in the "Add an activity or resource" "dialogue"
     And "Add selected activity" "button" should exist in the "Add an activity or resource" "dialogue"
     And "Add Assignment to starred" "button" should exist in the "Add an activity or resource" "dialogue"
+
+  @accessibility
+  Scenario: Activity chooser tab follows accessibility standards when activity is selected
+    Given I open the activity chooser
+    And I click on "All" "link" in the "Add an activity or resource" "dialogue"
+    And I hover over the "Add a new Assignment" "link" in the "Add an activity or resource" "dialogue"
+    Then the ".categorycontent" "css_element" should meet accessibility standards
+    And I click on "Add a new Assignment" "link" in the "Add an activity or resource" "dialogue"
+    Then the ".categorycontent" "css_element" should meet accessibility standards
